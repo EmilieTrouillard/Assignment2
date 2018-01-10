@@ -5,7 +5,7 @@ SRCS	= Mallocation.c
 
 OBJS	= jacobi.o
 OBJS	= gauss_seidel.o
-OBJS	= Mallication.o
+OBJS	= Mallocation.o
 
 TARGET	= mainPois.$(CC)
 
