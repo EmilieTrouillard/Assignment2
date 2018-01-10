@@ -3,10 +3,10 @@ gauss_seidel(int N, double **array, int max_iter, double threshold) {
 /* array is (N+2)*(N+2) */
     double 	delta = 2/(N+1);
     double 	fdelta2 = 200*delta*delta;
-    double 	i_inf=0.5*(N+1), i_sup=2*(N+1)/3, j_inf=(+1)N/6, j_sup=(N+1)/3;
+    double 	i_inf=0.5*(N+1), i_sup=2*(N+1)/3, j_inf=(N+1)/6, j_sup=(N+1)/3;
     double	tmp_old;
-    double	threshold2 = threshold * threshold
-    double 	d = threshold2 +1
+    double	threshold2 = threshold * threshold;
+    double 	d = threshold2 +1;
     int 	i, j, k=0;
 
     while ( d > threshold2 &&  k < max_iter ) {

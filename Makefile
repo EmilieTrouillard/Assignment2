@@ -1,7 +1,7 @@
 TARGET	= jacobi
-OBJS	= mainPois.o jacobi.o gauss_seidel.o Mallocation.o
+OBJS	= mainPois.o jacobi.o gauss_seidel.o Mallocation.o writepng.o
 
-OPT	= -g -fast -xopenmp -xloopinfo
+OPT	= -g -fast 
 ISA	= 
 PARA	= 
 
@@ -41,5 +41,8 @@ realclean: clean
 
 # dependencies
 #
-main.o  : mainPois.c
-write_png.o: write_png.h write_png.cc
+main.o  : mainPois.c jacobi.h gauss_seidel.h Mallocation.h writepng.h
+writepng.o: writepng.h writepng.cc
+jacobi.o: jacobi.h jacobi.c
+gauss_seidel.o: gauss_seidel.h gauss_seidel.c
+Mallocation.o: Mallocation.h Mallocation.c
