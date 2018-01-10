@@ -42,4 +42,4 @@ realclean: clean
 # dependencies
 #
 main.o  : mainPois.c
-writepng.o: writepng.h writepng.cc
+write_png.o: write_png.h write_png.cc
