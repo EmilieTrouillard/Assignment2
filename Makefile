@@ -1,22 +1,45 @@
+TARGET	= jacobi
+OBJS	= mainPois.o jacobi.o gauss_seidel.o Mallocation.o
 
-SRCS 	= jacobi.c
-SRCS	= gauss_seidel.c
-SRCS	= Mallocation.c
+OPT	= -g -fast -xopenmp -xloopinfo
+ISA	= 
+PARA	= 
 
-OBJS	= jacobi.o
-OBJS	= gauss_seidel.o
-OBJS	= Mallocation.o
+PNGWRITERPATH = pngwriter
+ARCH	      = $(shell uname -p)
+PNGWRTLPATH   = $(PNGWRITERPATH)/lib/$(ARCH)
+PNGWRTIPATH   = $(PNGWRITERPATH)/include
+PNGWRITERLIB  = $(PNGWRTLPATH)/libpngwriter.a
 
-TARGET	= mainPois.$(CC)
+CCC	= CC
+CXX	= CC
+CXXFLAGS= -I $(PNGWRTIPATH)
 
-CC		= cc
-OPT		= -g -O3
-CFLAGS	= $(OPT)
+CFLAGS	= $(OPT) $(ISA) $(PARA) $(XOPT)
 
-LIBS	= -L /usr/lib64/atlas -lsatlas
+F90C  	= f90
 
-all: $(TARGET)
+LIBS	= -L $(PNGWRTLPATH) -lpngwriter -lpng 
 
-$(TARGET): $(OBJS)
-	$(CC) -c stdafx.h -o stdafx.h.gch
-	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LIBS)
+
+all: $(PNGWRITERLIB) $(TARGET)
+
+$(TARGET): $(OBJS) 
+	$(CCC) $(CFLAGS) -o $@ $(OBJS) $(LIBS)
+
+$(PNGWRITERLIB):
+	@cd pngwriter/src && $(MAKE)
+
+clean:
+	@/bin/rm -f *.o core
+
+realclean: clean
+	@cd pngwriter/src && $(MAKE) clean
+	@rm -f $(PNGWRITERLIB)
+	@rm -f $(TARGET)
+	@rm -f jacobi.png
+
+# dependencies
+#
+main.o  : mainPois.c
+writepng.o: writepng.h writepng.cc
