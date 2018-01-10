@@ -5,36 +5,45 @@
 #include <stdlib.h>
 
 int main(int argc, char *argv[]){
- int method = atoi(argv[1]);
- int N = atoi(argv[2]);
- int max_iter = atoi(argv[3]);
- double threshold = atof(argv[4]);
+    int method = atoi(argv[1]);
+    int N = atoi(argv[2]);
+    int max_iter = atoi(argv[3]);
+    double threshold = atof(argv[4]);
+    int num_iter;
 
-// Allocate the NxN matrix for the room with Dirichlet conditions
-double ** matrixOut = malloc_matrix(N+2,N+2);
-for(int i=0; i<N+2; ++i){
-    matrixOut[i][N+1]=20;
-    matrixOut[N+1][i]=20;
-    matrixOut[0][i]=20;
-}
-
-// Either using Jacobi method
-if(method==0){
-        // Allocate the in-matrix
-    double ** matrixIn = malloc_matrix(N+2,N+2);
+    // Allocate and initialize the NxN matrix for the room with Dirichlet conditions
+    double ** matrixOut = malloc_matrix(N+2,N+2);
+    init_data(N+2, N+2, matrixOut);
     for(int i=0; i<N+2; ++i){
-            matrixIn[i][N+1]=20;
-            matrixIn[N+1][i]=20;
-            matrixIn[0][i]=20;
+    	matrixOut[i][N+1]=20.0;
+    	matrixOut[N+1][i]=20.0;
+    	matrixOut[0][i]=20.0;
+	matrixOut[i][0]=0.0;
     }
-        // Run the jacobi method
-    jacobi(N, matrixIn, matrixOut, max_iter, threshold);
-}
 
-// Or using Gauss-Seidel method
-else if(method==1){
-    gauss_seidel(N, matrixOut, max_iter, threshold);
-}
+    // Create the matrix for values of the function
+    double ** fmatrix = malloc_matrix(N+2,N+2);
+    init_f(N, fmatrix);
+
+    // Either using Jacobi method
+    if(method==0){
+        // Allocate and initialize the in-matrix
+    	double ** matrixIn = malloc_matrix(N+2,N+2);
+    	init_data(N+2, N+2, matrixIn);
+    	for(int i=0; i<N+2; ++i){
+            matrixIn[i][N+1]=20.0;
+            matrixIn[N+1][i]=20.0;
+            matrixIn[0][i]=20.0;
+	    matrixIn[i][0]=0.0;
+    	}
+        // Run the jacobi method
+    	num_iter = jacobi(N, matrixIn, matrixOut, max_iter, threshold, fmatrix);
+    }
+
+    // Or using Gauss-Seidel method
+    else if(method==1){
+    	num_iter = gauss_seidel(N, matrixOut, max_iter, threshold, fmatrix);
+    }
 
 /*
 // PNG output
@@ -47,6 +56,6 @@ for(int i=0; i<N+2; i++){
     printf("\n");}
 */
 
-
+printf("%d\n", num_iter);
 return 0;
 }

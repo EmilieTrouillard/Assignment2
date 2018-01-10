@@ -1,9 +1,7 @@
-void
-gauss_seidel(int N, double **array, int max_iter, double threshold) {
+int
+gauss_seidel(int N, double **array, int max_iter, double threshold, double **fmatrix) {
 /* array is (N+2)*(N+2) */
-    double 	delta = 2/(N+1);
-    double 	fdelta2 = 200*delta*delta;
-    double 	i_inf=0.5*(N+1), i_sup=2*(N+1)/3, j_inf=(N+1)/6, j_sup=(N+1)/3;
+
     double	tmp_old;
     double	threshold2 = threshold * threshold;
     double 	d = threshold2 +1;
@@ -15,16 +13,12 @@ gauss_seidel(int N, double **array, int max_iter, double threshold) {
 	
 	    for(j = 1; j <= N; j++){ 
 		tmp_old = array[i][j];
-		if(i>=i_inf && i <= i_sup && j>=j_inf && j<=j_sup){
-	    	array[i][j] = 0.25*(array[i-1][j]+array[i+1][j]+array[i][j-1]+array[i][j+1]+fdelta2);
-			}
-		else{
-		array[i][j] = 0.25*(array[i-1][j]+array[i+1][j]+array[i][j-1]+array[i][j+1]);
-			}
+		array[i][j] = 0.25*(array[i-1][j]+array[i+1][j]+array[i][j-1]+array[i][j+1]+fmatrix[i][j]);
 		d += (tmp_old - array[i][j])*(tmp_old - array[i][j]);
 		}
 
 	k++;
 	}
     }
+    return k;
 }
