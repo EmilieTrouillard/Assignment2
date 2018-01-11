@@ -5,11 +5,14 @@
 #include <stdlib.h>
 
 int main(int argc, char *argv[]){
+
+
+///// PRELOAD AND INITIALIZATION /////
     int method = atoi(argv[1]);
     int N = atoi(argv[2]);
     int max_iter = atoi(argv[3]);
     double threshold = atof(argv[4]);
-    int num_iter;
+    double num_iter;
 
     // Allocate and initialize the NxN matrix for the room with Dirichlet conditions
     double ** matrixOut = malloc_matrix(N+2,N+2);
@@ -25,7 +28,11 @@ int main(int argc, char *argv[]){
     double ** fmatrix = malloc_matrix(N+2,N+2);
     init_f(N, fmatrix);
 
-    // Either using Jacobi method
+
+///// JACOBI AND GAUSS METHODS /////
+
+
+    // If using Jacobi method not parallel
     if(method==0){
         // Allocate and initialize the in-matrix
     	double ** matrixIn = malloc_matrix(N+2,N+2);
@@ -40,10 +47,33 @@ int main(int argc, char *argv[]){
     	num_iter = jacobi(N, matrixIn, matrixOut, max_iter, threshold, fmatrix);
     }
 
-    // Or using Gauss-Seidel method
+
+
+    // If using Gauss-Seidel method not parallel
     else if(method==1){
     	num_iter = gauss_seidel(N, matrixOut, max_iter, threshold, fmatrix);
     }
+
+
+
+    // If using Jacobi method in parallel
+    else if(method==2){
+        // Allocate and initialize the in-matrix
+    	double ** matrixIn = malloc_matrix(N+2,N+2);
+    	init_data(N+2, N+2, matrixIn);
+    	for(int i=0; i<N+2; ++i){
+            matrixIn[i][N+1]=20.0;
+            matrixIn[N+1][i]=20.0;
+            matrixIn[0][i]=20.0;
+	    matrixIn[i][0]=0.0;
+    	}
+        // Run the jacobi method in parallel
+	#pragma omp parallel
+    	num_iter = jacobi(N, matrixIn, matrixOut, max_iter, threshold, fmatrix);
+    }
+
+
+
 
 /*
 // PNG output
@@ -56,6 +86,6 @@ for(int i=0; i<N+2; i++){
     printf("\n");}
 */
 
-printf("%d\n", num_iter);
+printf("%d\t %f\n", N, num_iter);
 return 0;
 }
