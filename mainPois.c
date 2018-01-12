@@ -12,7 +12,7 @@ int main(int argc, char *argv[]){
     int N = atoi(argv[2]);
     int max_iter = atoi(argv[3]);
     double threshold = atof(argv[4]);
-    double num_iter;
+    int num_iter;
 
     // Allocate and initialize the NxN matrix for the room with Dirichlet conditions
     double ** matrixOut = malloc_matrix(N+2,N+2);
@@ -86,6 +86,6 @@ for(int i=0; i<N+2; i++){
     printf("\n");}
 */
 
-printf("%d\t %f\n", N, num_iter);
+printf("%d\n", num_iter);
 return 0;
 }
