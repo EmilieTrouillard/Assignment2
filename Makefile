@@ -1,7 +1,7 @@
 TARGET	= proj2
 OBJS	= mainPois.o jacobi.o gauss_seidel.o Mallocation.o writepng.o
 
-OPT	= -g -fast -xopenmp -xloopinfo
+OPT	= -g -fast -xopenmp
 ISA	= 
 PARA	= 
 
